@@ -34,6 +34,7 @@ public class BankSlip implements Serializable {
 
 	@Id
 	@Getter
+	@Setter
 	@GeneratedValue
 	private UUID id;
 

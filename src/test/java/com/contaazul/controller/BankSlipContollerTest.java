@@ -2,6 +2,7 @@ package com.contaazul.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -84,6 +85,21 @@ public class BankSlipContollerTest {
 				.andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[0].customer", is("Gabriel")))
 				.andExpect(jsonPath("$[1].customer", is("Viana")));
 
+	}
+
+	@Test
+	public void shouldReturnStatus204WhenCancelBankSlipIsOk() throws Exception {
+		BankSlip bankSlip = createBankSlip("Gabriel", new Date(), null, new BigDecimal(1000));
+		BankSlip saved = service.create(bankSlip);
+
+		mock.perform(delete(Constants.URI.PATH_VARIABLE_ID, saved.getId()).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNoContent());
+	}
+
+	@Test
+	public void shouldReturnStatus404WhenBankSlipToCancelNotFound() throws Exception {
+		mock.perform(delete(Constants.URI.PATH_VARIABLE_ID, "123e4567-e89b-12d3-a456-556642440000")
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
 	}
 
 	private BankSlip createBankSlip(String customer, Date dueDate, Status status, BigDecimal totalInCents) {
