@@ -1,7 +1,14 @@
 package com.contaazul.controller;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 import org.json.JSONObject;
 import org.junit.Test;
@@ -16,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.contaazul.DesafioApplication;
 import com.contaazul.contants.Constants;
+import com.contaazul.repository.entity.BankSlip;
+import com.contaazul.repository.model.Status;
+import com.contaazul.service.BankSlipService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = DesafioApplication.class)
@@ -25,6 +35,9 @@ public class BankSlipContollerTest {
 
 	@Autowired
 	private MockMvc mock;
+
+	@Autowired
+	private BankSlipService service;
 
 	@Test
 	public void shouldCreateAndReturnStatus201() throws Exception {
@@ -56,6 +69,30 @@ public class BankSlipContollerTest {
 		mock.perform(post(Constants.URI.BASE).content(request.toString()).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnprocessableEntity());
 
+	}
+
+	@Test
+	public void shouldReturn200WhenGetAllBankSlips() throws Exception {
+
+		BankSlip bankSlip1 = createBankSlip("Gabriel", new Date(), null, new BigDecimal(1000));
+		service.create(bankSlip1);
+
+		BankSlip bankSlip2 = createBankSlip("Viana", new Date(), null, new BigDecimal(2000));
+		service.create(bankSlip2);
+
+		mock.perform(get(Constants.URI.BASE).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[0].customer", is("Gabriel")))
+				.andExpect(jsonPath("$[1].customer", is("Viana")));
+
+	}
+
+	private BankSlip createBankSlip(String customer, Date dueDate, Status status, BigDecimal totalInCents) {
+		BankSlip bankSlip = new BankSlip();
+		bankSlip.setCustomer(customer);
+		bankSlip.setDueDate(dueDate);
+		bankSlip.setStatus(status);
+		bankSlip.setTotalInCents(totalInCents);
+		return bankSlip;
 	}
 
 }

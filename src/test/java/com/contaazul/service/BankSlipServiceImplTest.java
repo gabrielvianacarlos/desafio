@@ -39,4 +39,10 @@ public class BankSlipServiceImplTest {
 		verify(repository, times(1)).save(bankSlip);
 	}
 
+	@Test
+	public void shouldCallRepositoryOnceRetrieveAllBankSlips() throws Exception {
+		this.service.retriveAll();
+		verify(repository, times(1)).findAll();
+	}
+
 }

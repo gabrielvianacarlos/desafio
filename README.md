@@ -1,7 +1,16 @@
 # desafio
 
-Desafio
-
+Essa aplicação e uma API REST que tem como a gestão de boletos.
+As operações disponibilizadas são:
+* Criar boleto
+  * Cria um novo boleto com o status pendente (PENDING)
+* Listar todos os boletos cadastrados
+* Recuperar os detalhes de um boleto
+  * Essa funcionalidade também calcula uma multa caso o pagamento esteja atrasada e retorna para o consumidor
+* Pagar um boleto
+  * Altera o status do boleto para pago (PAID)
+* Cancelar um boleto
+  * Altera o status do boleto para cancelado (CANCELED)
 
 ### Executando a aplicação
 
