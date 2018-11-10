@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.contaazul.repository.BankSlipRepository;
 import com.contaazul.repository.entity.BankSlip;
+import com.contaazul.repository.model.Status;
 
 @Service
 public class BankSlipServiceImpl implements BankSlipService {
@@ -13,8 +14,9 @@ public class BankSlipServiceImpl implements BankSlipService {
 	private BankSlipRepository repository;
 
 	@Override
-	public void create(BankSlip bankSlip) {
-		this.repository.save(bankSlip);
+	public BankSlip create(BankSlip bankSlip) {
+		bankSlip.setStatus(Status.PENDING);
+		return this.repository.save(bankSlip);
 	}
 
 }

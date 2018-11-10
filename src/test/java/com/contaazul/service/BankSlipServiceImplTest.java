@@ -33,7 +33,7 @@ public class BankSlipServiceImplTest {
 	private BankSlipRepository repository;
 
 	@Test
-	public void shouldCallRepositoryOnceWhenCreateBankSlip() {
+	public void shouldCallRepositoryOnceWhenCreateBankSlip() throws Exception {
 		BankSlip bankSlip = new BankSlip();
 		this.service.create(bankSlip);
 		verify(repository, times(1)).save(bankSlip);
