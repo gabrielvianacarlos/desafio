@@ -16,26 +16,34 @@ import javax.validation.constraints.NotNull;
 
 import com.contaazul.repository.model.Status;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@NoArgsConstructor
 public class BankSlip {
 
 	@Id
 	@GeneratedValue
 	private UUID id;
 
+	@Setter
 	@NotNull
 	@Column(name = "due_date", nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dueDate;
 
+	@Setter
 	@NotNull
 	@Column(name = "total_in_cents", nullable = false)
 	private BigDecimal totalInCents;
 
+	@Setter
 	@NotNull
 	@Column(nullable = false)
 	private String customer;
 
+	@Setter
 	@NotNull
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
