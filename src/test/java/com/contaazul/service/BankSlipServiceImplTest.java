@@ -1,9 +1,13 @@
 package com.contaazul.service;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,18 +58,12 @@ public class BankSlipServiceImplTest {
 	@Test
 	public void shouldCallRepositoryOnceWhenCancelBankSlipIsOK() {
 		BankSlip bankSlip = new BankSlip();
-		bankSlip.setStatus(Status.PENDING);
-
-		BankSlip bankSlipMock = new BankSlip();
 		UUID id = new UUID(111222, 333444);
-		bankSlipMock.setId(id);
-		when(repository.save(bankSlip)).thenReturn(bankSlipMock);
-		when(repository.findById(id)).thenReturn(Optional.ofNullable(bankSlipMock));
+		bankSlip.setId(id);
+		when(repository.findById(id)).thenReturn(Optional.of(bankSlip));
 
-		BankSlip bankSlipSaved = this.repository.save(bankSlip);
-
-		this.service.cancelBankSlip(bankSlipSaved.getId());
-		verify(repository, times(1)).save(bankSlipSaved);
+		this.service.cancelBankSlip(bankSlip.getId());
+		verify(repository, times(1)).save(bankSlip);
 	}
 
 	@Test(expected = BankSlipNotFoundException.class)
@@ -73,7 +71,32 @@ public class BankSlipServiceImplTest {
 
 		UUID id = new UUID(13413, 341341);
 		this.service.cancelBankSlip(id);
-		verify(repository, times(1)).save(new BankSlip());
+	}
+
+	@Test
+	public void shouldCallRepositoryOnceWhenPayBankSlipIsOK() {
+
+		BankSlip bankSlip = new BankSlip();
+		UUID id = new UUID(111222, 333444);
+		bankSlip.setId(id);
+		bankSlip.setCustomer("Gabriel");
+		bankSlip.setPaymentDate(new Date());
+		bankSlip.setStatus(Status.PAID);
+		bankSlip.setTotalInCents(new BigDecimal(1000));
+
+		when(repository.findById(id)).thenReturn(Optional.of(bankSlip));
+		when(repository.save(bankSlip)).thenReturn(bankSlip);
+
+		this.service.payBankSlip(id, new Date());
+		verify(repository, times(1)).save(bankSlip);
+	}
+
+	@Test
+	public void shouldReturnOptionalEmptyWhenTryToPayAndNotFindBankSlipId() {
+
+		UUID id = new UUID(13413, 341341);
+		Optional<BankSlip> op = this.service.payBankSlip(id, new Date());
+		assertThat(Optional.empty(), is(op));
 	}
 
 }

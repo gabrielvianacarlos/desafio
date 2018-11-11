@@ -1,6 +1,8 @@
 package com.contaazul.service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.contaazul.repository.entity.BankSlip;
@@ -11,4 +13,8 @@ public interface BankSlipService {
 	List<BankSlip> retriveAll();
 
 	void cancelBankSlip(UUID id);
+
+	Optional<BankSlip> payBankSlip(UUID id, Date paymentDate);
+
+	Optional<BankSlip> findById(UUID id);
 }

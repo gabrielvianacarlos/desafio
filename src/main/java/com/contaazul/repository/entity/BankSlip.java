@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -67,4 +68,17 @@ public class BankSlip implements Serializable {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Status status;
+
+	@Getter
+	@Setter
+	@Temporal(TemporalType.DATE)
+	@Column(name = "payment_date")
+	@JsonProperty(value = "payment_date")
+	private Date paymentDate;
+
+	@Getter
+	@Setter
+	@Transient
+	private BigDecimal fine;
+
 }

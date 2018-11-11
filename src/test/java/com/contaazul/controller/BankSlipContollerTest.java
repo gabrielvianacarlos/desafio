@@ -5,12 +5,17 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import org.hamcrest.core.IsNull;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -102,6 +107,78 @@ public class BankSlipContollerTest {
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
 	}
 
+	@Test
+	public void shouldReturn204WhenBankSlipIsPaid() throws Exception {
+
+		BankSlip bankSlip = createBankSlip("Gabriel", new Date(), null, new BigDecimal(1000));
+		BankSlip saved = service.create(bankSlip);
+
+		JSONObject request = new JSONObject();
+		request.put("payment_date", "2018-01-03");
+
+		mock.perform(put(Constants.URI.URI_NAO_SEI, saved.getId()).content(request.toString())
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
+	}
+
+	@Test
+	public void shouldReturnStatus404WhenBankSlipToPaidNotFound() throws Exception {
+		JSONObject request = new JSONObject();
+		request.put("payment_date", "2018-01-03");
+
+		mock.perform(put(Constants.URI.URI_NAO_SEI, "123e4567-e89b-12d3-a456-556642440000").content(request.toString())
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void shouldReturnFineOfOnePercentWhenPaymentIsLateForMoreThanTenDays() throws Exception {
+		BankSlip bankSlip = createBankSlip("Gabriel", getTodayMinusDays(12), null, new BigDecimal(1000));
+		BankSlip saved = service.create(bankSlip);
+
+		mock.perform(get(Constants.URI.PATH_VARIABLE_ID, saved.getId()).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.fine", is(100.0)));
+	}
+
+	@Test
+	public void shouldReturnFineOfHalfAPercentWhenPaymentIsLateLessThanTenDays() throws Exception {
+		BankSlip bankSlip = createBankSlip("Gabriel", getTodayMinusDays(5), null, new BigDecimal(1000));
+
+		BankSlip saved = service.create(bankSlip);
+
+		mock.perform(get(Constants.URI.PATH_VARIABLE_ID, saved.getId()).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.fine", is(50.0)));
+	}
+
+	@Test
+	public void shouldReturnFineOfHalfAPercentWhenPaymentIsLateForTenDays() throws Exception {
+
+		BankSlip bankSlip = createBankSlip("Gabriel", getTodayMinusDays(10), null, new BigDecimal(1000));
+
+		BankSlip saved = service.create(bankSlip);
+
+		mock.perform(get(Constants.URI.PATH_VARIABLE_ID, saved.getId()).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.fine", is(50.0)));
+	}
+
+	@Test
+	public void shouldNotReturnFineWhenPaymentIsNotLate() throws Exception {
+
+		BankSlip bankSlip = createBankSlip("Gabriel", new Date(), null, new BigDecimal(1000));
+
+		BankSlip saved = service.create(bankSlip);
+
+		mock.perform(get(Constants.URI.PATH_VARIABLE_ID, saved.getId()).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.fine").value(IsNull.nullValue()));
+	}
+
+	@Test
+	public void shouldReturnStatus404WhenBankSlipToRetrieveNotFound() throws Exception {
+		JSONObject request = new JSONObject();
+		request.put("payment_date", "2018-01-03");
+
+		mock.perform(get(Constants.URI.PATH_VARIABLE_ID, "123e4567-e89b-12d3-a456-556642440000")
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+	}
+
 	private BankSlip createBankSlip(String customer, Date dueDate, Status status, BigDecimal totalInCents) {
 		BankSlip bankSlip = new BankSlip();
 		bankSlip.setCustomer(customer);
@@ -109,6 +186,13 @@ public class BankSlipContollerTest {
 		bankSlip.setStatus(status);
 		bankSlip.setTotalInCents(totalInCents);
 		return bankSlip;
+	}
+
+	private Date getTodayMinusDays(int days) {
+		String dueDate = LocalDate.now().minusDays(days).toString();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate formatDate = LocalDate.parse(dueDate, formatter);
+		return Date.from(formatDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 
 }
