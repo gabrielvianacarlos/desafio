@@ -22,4 +22,6 @@ public interface Constants {
 
 	}
 
+	String YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ss";
+
 }

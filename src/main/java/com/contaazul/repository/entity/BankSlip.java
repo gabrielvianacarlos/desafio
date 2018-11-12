@@ -2,6 +2,9 @@ package com.contaazul.repository.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,6 +21,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.contaazul.contants.Constants;
 import com.contaazul.repository.model.Status;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -80,5 +84,14 @@ public class BankSlip implements Serializable {
 	@Setter
 	@Transient
 	private BigDecimal fine;
+
+	public long getDaysOfLate() {
+		java.time.temporal.Temporal now = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+		LocalDateTime localDate = LocalDateTime
+				.parse(new SimpleDateFormat(Constants.YYYY_MM_DD_T_HH_MM_SS).format(this.dueDate));
+
+		Duration duration = Duration.between(localDate, now);
+		return duration.toDays();
+	}
 
 }
