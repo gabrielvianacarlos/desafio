@@ -26,3 +26,13 @@ _mvn clean compile test_
 ## Para testar a API via Swagger
 [http://localhost:8080/swagger-ui.html#/](http://localhost:8080/swagger-ui.html#/)
 * Ver bank-slip-contrller
+
+## Para acessar o banco de dados
+http://localhost:8080/h2/
+banco: desafio
+user:sa
+password:
+
+## Para executar os testes de mutantes (Use com parcimônia)
+Na raíz do projeto, executar o comando _mvn org.pitest:pitest-maven:mutationCoverage_
+Esse comando gera um relatório .html com o resultado dos testes na pasta _target/pit-reports_

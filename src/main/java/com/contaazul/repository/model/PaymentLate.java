@@ -20,7 +20,7 @@ public enum PaymentLate implements Fine {
 
 		@Override
 		public BigDecimal calculate(BigDecimal totalInCents) {
-			return BigDecimal.ZERO;
+			return null;
 		}
 	};
 

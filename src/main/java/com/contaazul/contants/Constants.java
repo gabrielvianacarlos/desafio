@@ -22,6 +22,17 @@ public interface Constants {
 
 	}
 
-	String YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ss";
+	public interface LOCALE {
+		String PT_BR = "pt-BR";
+	}
+
+	public interface TIME_ZONE {
+		String AMERICA_SAO_PAULO = "America/Sao_Paulo";
+	}
+
+	public interface DATE_PATTERN {
+		String YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ss";
+		String YYYY_MM_DD = "yyyy-MM-dd";
+	}
 
 }

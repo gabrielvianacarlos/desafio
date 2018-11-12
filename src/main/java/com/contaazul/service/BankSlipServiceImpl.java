@@ -71,7 +71,7 @@ public class BankSlipServiceImpl implements BankSlipService {
 	}
 
 	private BigDecimal getCalculatedFine(BankSlip bankSlip) {
-		long diff = bankSlip.getDaysOfLate();
+		long diff = bankSlip.calculateDaysOfLate();
 		PaymentLate paymentLate = PaymentLate.valueOf(diff);
 		return paymentLate.calculate(bankSlip.getTotalInCents());
 	}

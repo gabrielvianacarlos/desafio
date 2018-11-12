@@ -2,6 +2,7 @@ package com.contaazul.repository.model;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.junit.Assert.assertNull;
 
 import java.math.BigDecimal;
 
@@ -33,7 +34,7 @@ public class PaymentLateTest {
 	@Test
 	public void shouldReturnFineOfZeroWhenPaymentIsNotLate() {
 		BigDecimal fine = PaymentLate.valueOf(0).calculate(new BigDecimal(1000));
-		assertThat(fine, comparesEqualTo(BigDecimal.ZERO));
+		assertNull(fine);
 	}
 
 	@Test

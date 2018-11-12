@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import org.hamcrest.core.IsNull;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -129,7 +130,7 @@ public class BankSlipContollerTest {
 	}
 
 	@Test
-	public void shouldReturnFineOfOnePercentWhenPaymentIsLateForMoreThanTenDays() throws Exception {
+	public void shouldReturn200WithFineWhenGetBankSlipDetailsAndBankSlipIsLate() throws Exception {
 		BankSlip bankSlip = createBankSlip("Gabriel", getTodayMinusDays(12), null, new BigDecimal(1000));
 		BankSlip saved = service.create(bankSlip);
 
@@ -138,35 +139,14 @@ public class BankSlipContollerTest {
 	}
 
 	@Test
-	public void shouldReturnFineOfHalfAPercentWhenPaymentIsLateLessThanTenDays() throws Exception {
-		BankSlip bankSlip = createBankSlip("Gabriel", getTodayMinusDays(5), null, new BigDecimal(1000));
-
-		BankSlip saved = service.create(bankSlip);
-
-		mock.perform(get(Constants.URI.PATH_VARIABLE_ID, saved.getId()).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.fine", is(50.0)));
-	}
-
-	@Test
-	public void shouldReturnFineOfHalfAPercentWhenPaymentIsLateForTenDays() throws Exception {
-
-		BankSlip bankSlip = createBankSlip("Gabriel", getTodayMinusDays(10), null, new BigDecimal(1000));
-
-		BankSlip saved = service.create(bankSlip);
-
-		mock.perform(get(Constants.URI.PATH_VARIABLE_ID, saved.getId()).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.fine", is(50.0)));
-	}
-
-	@Test
-	public void shouldNotReturnFineWhenPaymentIsNotLate() throws Exception {
+	public void shouldReturn200WithNoFineWhenGetBankSlipDetailsAndBankSlipIsNotLate() throws Exception {
 
 		BankSlip bankSlip = createBankSlip("Gabriel", new Date(), null, new BigDecimal(1000));
 
 		BankSlip saved = service.create(bankSlip);
 
 		mock.perform(get(Constants.URI.PATH_VARIABLE_ID, saved.getId()).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.fine").value(BigDecimal.ZERO));
+				.andExpect(status().isOk()).andExpect(jsonPath("$.fine").value(IsNull.nullValue()));
 	}
 
 	@Test

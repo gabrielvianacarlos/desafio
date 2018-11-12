@@ -23,6 +23,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.contaazul.contants.Constants;
 import com.contaazul.repository.model.Status;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -49,7 +50,8 @@ public class BankSlip implements Serializable {
 	@Column(name = "due_date", nullable = false)
 	@Temporal(TemporalType.DATE)
 	@JsonProperty(value = "due_date")
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	@JsonFormat(pattern = Constants.DATE_PATTERN.YYYY_MM_DD, locale = Constants.LOCALE.PT_BR, timezone = Constants.TIME_ZONE.AMERICA_SAO_PAULO)
+	@DateTimeFormat(pattern = Constants.DATE_PATTERN.YYYY_MM_DD)
 	@ApiModelProperty(notes = "Formato: yyyy-MM-dd")
 	private Date dueDate;
 
@@ -78,6 +80,8 @@ public class BankSlip implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "payment_date")
 	@JsonProperty(value = "payment_date")
+	@JsonFormat(pattern = Constants.DATE_PATTERN.YYYY_MM_DD, locale = Constants.LOCALE.PT_BR, timezone = Constants.TIME_ZONE.AMERICA_SAO_PAULO)
+	@DateTimeFormat(pattern = Constants.DATE_PATTERN.YYYY_MM_DD)
 	private Date paymentDate;
 
 	@Getter
@@ -85,10 +89,10 @@ public class BankSlip implements Serializable {
 	@Transient
 	private BigDecimal fine;
 
-	public long getDaysOfLate() {
+	public long calculateDaysOfLate() {
 		java.time.temporal.Temporal now = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
 		LocalDateTime localDate = LocalDateTime
-				.parse(new SimpleDateFormat(Constants.YYYY_MM_DD_T_HH_MM_SS).format(this.dueDate));
+				.parse(new SimpleDateFormat(Constants.DATE_PATTERN.YYYY_MM_DD_T_HH_MM_SS).format(this.dueDate));
 
 		Duration duration = Duration.between(localDate, now);
 		return duration.toDays();
