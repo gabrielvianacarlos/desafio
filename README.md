@@ -27,6 +27,13 @@ _mvn clean compile test_
 [http://localhost:8080/swagger-ui.html#/](http://localhost:8080/swagger-ui.html#/)
 * Ver bank-slip-contrller
 
+## Para testar via Postman
+Na raiz do projeto existe uma pasta de nome postman. Para testar, é necessário fazer download do [postman](https://www.getpostman.com/apps) e executar o seguintes passos:
+* Importar o arquivo Desafio.postman_collection.json
+* Importar o arquivo globals.postman_globals.json
+
+OBS: A execução do request criar_boleto grava na variável gloabal o id do boleto. Dessa forma, o id do último boleto criado será utilizado nos demais requests.
+
 ## Para acessar o banco de dados
 http://localhost:8080/h2/
 banco: desafio

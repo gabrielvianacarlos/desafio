@@ -1,0 +1,107 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Desafio",
+		"_postman_id": "8df1f518-c058-c680-2e80-1c234f0380a8",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "criar_boleto",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"id_boleto\", jsonData.id);",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/rest/bankslips",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"due_date\":\"2018-11-10\",\n \"total_in_cents\": 1000,\n \"customer\":\"Trillian Company\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "listar_boletos",
+			"request": {
+				"url": "http://localhost:8080/rest/bankslips",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "detalhe_boleto",
+			"request": {
+				"url": "http://localhost:8080/rest/bankslips/{{id_boleto}}",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "pagar_boleto",
+			"request": {
+				"url": "http://localhost:8080/rest/bankslips/{{id_boleto}}/payments",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"payment_date\":\"2018-12-10\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "cancelar_boleto",
+			"request": {
+				"url": "http://localhost:8080/rest/bankslips/{{id_boleto}}",
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

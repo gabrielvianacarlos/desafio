@@ -1,0 +1,16 @@
+{
+  "id": "52923f36-6528-930d-7c35-f8e4c9856c8b",
+  "name": "Postman Globals",
+  "values": [
+    {
+      "key": "id_boleto",
+      "value": "b5dd8996-6043-4c03-85a6-fce24152efff",
+      "description": "",
+      "type": "text",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "globals",
+  "_postman_exported_at": "2018-11-12T21:32:59.309Z",
+  "_postman_exported_using": "Postman/5.5.3"
+}
