@@ -7,11 +7,12 @@ inputs:
     required: true
     default: toggles.yml
 
-using: 'composite'
-  steps:
-  - name: Verify Toggles
-    id: verifytoggles
-    run: bash ${{ github.action_path }}/cmd.sh
-    shell: bash
-    env:
-      FILE: ${{ inputs.file }}
+runs:
+  using: 'composite'
+    steps:
+    - name: Verify Toggles
+      id: verifytoggles
+      run: bash ${{ github.action_path }}/cmd.sh
+      shell: bash
+      env:
+        FILE: ${{ inputs.file }}
