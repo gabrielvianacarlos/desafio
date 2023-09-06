@@ -1,0 +1,18 @@
+name: "verify-toggles"
+description: 'Verify feature toogles end date'
+
+inputs:
+  file:
+    description: 'File with toggles'
+    required: true
+    default: toggles.yml
+
+runs:
+  using: 'composite'
+  steps:
+    - run: echo ${{ github.action_path }} >> $GITHUB_PATH
+      shell: bash
+    - run: cmd.sh
+      shell: bash
+      env:
+        FILE: ${{ inputs.file }}
