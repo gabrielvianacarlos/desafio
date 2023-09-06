@@ -1,7 +1,7 @@
 # This workflow will build a Java project with Ant
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-ant
 
-name: Java CI
+name: check toggles
 
 on:
   push:
@@ -11,14 +11,11 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    name: Rodando o check de feature toggles
     steps:
-    - name: clone-application
-      uses: actions/checkout@v3
-      
-    - name: verify-toggles
-      uses: gabrielvianacarlos/desafio/actions/verify-toggles@create_action
-      with:
-        file: "toggles.yml"
+      - uses: actions/checkout@v3
+      - name: verify-toggles
+        uses: gabrielvianacarlos/desafio/actions/verify-toggles@create_action
+        with:
+          file: "toggles.yml"
