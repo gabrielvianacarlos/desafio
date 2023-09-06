@@ -10,9 +10,9 @@ inputs:
 runs:
   using: 'composite'
   steps:
-  - name: Verify Toggles
-    id: verifytoggles
-    run: bash ${{ github.action_path }}/cmd.sh
-    shell: bash
-    env:
-      FILE: ${{ inputs.file }}
+    - run: echo ${{ github.action_path }} >> $GITHUB_PATH
+      shell: bash
+    - run: cmd.sh
+      shell: bash
+      env:
+        FILE: ${{ inputs.file }}
