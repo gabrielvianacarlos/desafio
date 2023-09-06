@@ -17,7 +17,8 @@ jobs:
     steps:
     - name: clone-application
       uses: actions/checkout@v3
+      
     - name: verify-toggles
-      uses: gabrielvianacarlos/desafio/actions/verify-toggles@create_action
+      uses: gabrielvianacarlos/desafio/actions/verify-toggles@d38fc4b093e88399cdc09b4825af868ee9585137
       with:
         file: "toggles.yml"
