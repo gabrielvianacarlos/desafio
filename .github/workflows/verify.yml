@@ -16,6 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: verify-toggles
-        uses: gabrielvianacarlos/desafio/actions/verify-toggles@create_action
+        uses: actions/verify-toggles@create_action
         with:
           file: "toggles.yml"
