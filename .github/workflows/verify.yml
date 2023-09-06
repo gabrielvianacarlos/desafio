@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: clone-application
+      uses: actions/checkout@v3
     - name: verify-toggles
       uses: gabrielvianacarlos/desafio/actions/verify-toggles@create_action
       with:
