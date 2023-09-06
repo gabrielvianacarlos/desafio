@@ -16,6 +16,6 @@ jobs:
 
     steps:
     - name: verify-toggles
-      uses: actions/verify-toggles@master
+      uses: actions/verify-toggles@reate_action
       with:
         file: "toggles.yml"
